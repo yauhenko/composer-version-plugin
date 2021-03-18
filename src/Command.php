@@ -23,14 +23,15 @@ class Command extends BaseCommand {
 			return 1;
 		}
 
-		$file = $baseDir . '/composer.json';
+		$packageJson = $baseDir . '/composer.json';
+		$packageLock = str_replace('.json', '.lock', $packageJson);
 
-		if(!file_exists($file) || !is_file($file)) {
+		if(!file_exists($packageJson) || !is_file($packageJson)) {
 			$io->error('Failed to detect composer.json location');
 			return 1;
 		}
 
-		$package = json_decode(file_get_contents($file), true);
+		$package = json_decode(file_get_contents($packageJson), true);
 
 		if(!isset($package['version']) || !$package['version']) {
 			$package['version'] = '0.0.0';
@@ -65,12 +66,15 @@ class Command extends BaseCommand {
 			return 1;
 		}
 
-		if(!@file_put_contents($file, str_replace("    ", "\t", json_encode($package, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)))) {
+		if(!@file_put_contents($packageJson, str_replace("    ", "\t", json_encode($package, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)))) {
 			$io->error('Failed to write composer.json');
 			return 1;
 		}
 
-		exec('git add ' . $file);
+		$mtime = filemtime($packageJson);
+		touch($packageLock, $mtime);
+
+		exec('git add ' . $packageJson . ' ' . $packageLock);
 		exec('git commit -m ' . escapeshellarg("version updated to v{$package['version']}"));
 		exec('git tag ' . escapeshellarg("v{$package['version']}"));
 
