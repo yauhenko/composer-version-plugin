@@ -4,7 +4,7 @@ This is a simple `composer.json` patch version change tool
 
 Requirements
 ------------
-- PHP 7.4+
+- PHP 7.4+ or 8.0+
 - Composer 2.0+
 
 Install

@@ -71,8 +71,8 @@ class Command extends BaseCommand {
 		}
 
 		exec('git add ' . $file);
-		exec('git commit -m ' . escapeshellarg("version updated to {$package['version']}"));
-		exec('git tag v' . escapeshellarg("v{$package['version']}"));
+		exec('git commit -m ' . escapeshellarg("version updated to v{$package['version']}"));
+		exec('git tag ' . escapeshellarg("v{$package['version']}"));
 
 		$io->success('Version updated: ' . $package['version']);
 
