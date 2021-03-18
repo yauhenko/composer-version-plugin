@@ -1,7 +1,7 @@
 {
 	"name": "yauhenko/composer-version-plugin",
 	"description": "Patch version update tool",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"type": "composer-plugin",
 	"license": "MIT",
 	"require": {

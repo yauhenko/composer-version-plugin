@@ -71,8 +71,7 @@ class Command extends BaseCommand {
 			return 1;
 		}
 
-		$mtime = filemtime($packageJson);
-		touch($packageLock, $mtime);
+		exec('composer update -q');
 
 		exec('git add ' . $packageJson . ' ' . $packageLock);
 		exec('git commit -m ' . escapeshellarg("version updated to v{$package['version']}"));
