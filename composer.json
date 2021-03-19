@@ -1,13 +1,14 @@
 {
 	"name": "yauhenko/composer-version-plugin",
 	"description": "Patch version update tool",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"type": "composer-plugin",
 	"license": "MIT",
 	"require": {
 		"php": "^7.4|^8.0",
 		"composer-plugin-api": "^2.0",
-		"symfony/console": "^5.0"
+		"symfony/console": "^5.0",
+		"ext-json": "*"
 	},
 	"require-dev": {
 		"composer/composer": "^2.0"
