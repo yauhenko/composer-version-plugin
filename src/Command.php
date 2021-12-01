@@ -2,6 +2,7 @@
 
 namespace Yauhenko\Composer\Plugins\Version;
 
+use Composer\Package\Locker;
 use Composer\Command\BaseCommand;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,6 +33,7 @@ class Command extends BaseCommand {
 		}
 
 		$package = json_decode(file_get_contents($packageJson), true);
+		$lock = json_decode(file_get_contents($packageLock), true);
 
 		if(!isset($package['version']) || !$package['version']) {
 			$package['version'] = '0.0.0';
@@ -71,7 +73,12 @@ class Command extends BaseCommand {
 			return 1;
 		}
 
-		exec('composer update -q');
+		$lock['content-hash'] = Locker::getContentHash(file_get_contents($packageJson));
+
+		if(!@file_put_contents($packageLock, str_replace("    ", "\t", json_encode($lock, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)))) {
+			$io->error('Failed to write composer.lock');
+			return 1;
+		}
 
 		exec('git add ' . $packageJson . ' ' . $packageLock);
 		exec('git commit -m ' . escapeshellarg("version updated to v{$package['version']}"));
